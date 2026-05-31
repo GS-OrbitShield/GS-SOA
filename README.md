@@ -146,7 +146,7 @@ O projeto se alinha a este ODS por:
 
 ### API Keys de Teste
 
-Use uma das seguintes chaves nos testes:
+Use uma das seguintes CHAVES nos testes (o hash é apenas um exemplo de como é salvo, não deve ser usado diretamente):
 
 | Chave | Empresa | Hash SHA-256 |
 |-------|---------|------|
