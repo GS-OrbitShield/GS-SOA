@@ -114,8 +114,8 @@ O projeto se alinha a este ODS por:
 
 1. **Clone o repositório**
    ```bash
-   git clone https://github.com/seu-usuario/OrbitShield-api.git
-   cd OrbitShield-api
+   git clone https://github.com/GS-OrbitShield/GS-SOA.git
+   cd GS-SOA
    ```
 
 2. **Compile e inicie a aplicação**
