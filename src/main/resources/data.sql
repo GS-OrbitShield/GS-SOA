@@ -1,6 +1,6 @@
 -- Insert test API Keys
-INSERT INTO api_key (id, key_hash, company, active, created_at) VALUES ('aaa00000-0000-0000-0000-000000000001', '53fe96112e0f89be35d8043ebdaf72443319dc650a2e403a234cdb16a77e54f2', 'SpaceX', true, CURRENT_TIMESTAMP());
-INSERT INTO api_key (id, key_hash, company, active, created_at) VALUES ('aaa00000-0000-0000-0000-000000000002', '52bf2e6fc54824f5840bbc8a40673d88cf3262ff4ce00b61f7b76ca11633d423', 'ESA', true, CURRENT_TIMESTAMP());
+INSERT INTO api_key (id, key_hash, company, active, created_at) VALUES ('aaa00000-0000-0000-0000-000000000001', '93e08d75d40523d42bac5777cd4bab24147f0d12287fffc22bf4cbad4b7034be', 'SpaceX', true, CURRENT_TIMESTAMP());
+INSERT INTO api_key (id, key_hash, company, active, created_at) VALUES ('aaa00000-0000-0000-0000-000000000002', 'd34d4715554805a55ba4b0f69e6d749ccf6f243ef9f4e35d0db1b951ebaeb8ed', 'ESA', true, CURRENT_TIMESTAMP());
 
 -- Insert test satellites
 INSERT INTO satellite (id, name, owner_company, norad_id, orbit_type, altitude_km, inclination, status, created_at, updated_at) VALUES ('bbb00000-0000-0000-0000-000000000001', 'StarLink-1234', 'SpaceX', '48274', 'LEO', 550.0, 53.0, 'ACTIVE', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());

@@ -44,17 +44,16 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
         try {
             String apiKey = extractApiKey(request);
+            logger.debug("Extracted API Key: {}", apiKey != null ? "[PRESENT]" : "[MISSING]");
 
             if (apiKey == null) {
                 logger.warn("Missing API Key for path: {}", requestPath);
                 throw new UnauthorizedException("API Key is required.");
             }
 
-            // Hash the API key and validate
-            String apiKeyHash = HashUtil.sha256(apiKey);
-            ApiKey validApiKey = apiKeyRepository.findByKeyHash(apiKeyHash)
+            ApiKey validApiKey = apiKeyRepository.findByKeyHash(apiKey)
                     .orElseThrow(() -> {
-                        logger.warn("Invalid API Key provided for path: {}", requestPath);
+                        logger.warn("Invalid API Key hash {} for path: {}", apiKey, requestPath);
                         return new UnauthorizedException("Invalid or inactive API Key.");
                     });
 
