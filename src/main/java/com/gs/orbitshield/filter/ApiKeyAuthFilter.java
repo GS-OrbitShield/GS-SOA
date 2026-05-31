@@ -51,9 +51,19 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
                 throw new UnauthorizedException("API Key is required.");
             }
 
-            ApiKey validApiKey = apiKeyRepository.findByKeyHash(apiKey)
+            // Hash the API key and validate
+            String apiKeyHash = HashUtil.sha256(apiKey);
+            logger.debug("Computed Hash for validation: [{}]", apiKeyHash);
+
+            ApiKey validApiKey = apiKeyRepository.findByKeyHash(apiKeyHash)
                     .orElseThrow(() -> {
-                        logger.warn("Invalid API Key hash {} for path: {}", apiKey, requestPath);
+                        if (apiKey.length() == 64 && apiKey.matches("^[a-fA-F0-9]{64}$")) {
+                            logger.warn("Invalid API Key hash [{}] for path: [{}]. Note: The provided key looks like a SHA-256 hash. Ensure you are sending the PLAIN-TEXT key, not its hash.", 
+                                    apiKeyHash, requestPath);
+                        } else {
+                            logger.warn("Invalid API Key hash [{}] for path: [{}] (API Key length: {})", 
+                                    apiKeyHash, requestPath, apiKey.length());
+                        }
                         return new UnauthorizedException("Invalid or inactive API Key.");
                     });
 
@@ -81,7 +91,9 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
     private String extractApiKey(HttpServletRequest request) {
         String headerValue = request.getHeader("X-API-Key");
         if (headerValue != null && !headerValue.isEmpty()) {
-            return headerValue;
+            String trimmedKey = headerValue.trim();
+            logger.debug("Extracted and trimmed API Key length: {}", trimmedKey.length());
+            return trimmedKey;
         }
         return null;
     }
