@@ -393,13 +393,13 @@ curl -X GET http://localhost:8080/api/v1/satellites
 Os principais desafios seriam:
 
 **(a) Concorrência no Banco de Dados**  
-Um banco H2/SQLite não suporta escrita concorrente em alta carga. Seria necessário migrar para PostgreSQL ou MySQL com connection pooling (HikariCP) para distribuir as conexões entre as requisições.
+Um banco H2/SQLite não suporta escrita concorrente em alta carga. Seria necessário migrar para um banco ACID (Como PostgreSQL ou Cassandra da AWS) para distribuir com read-replicas e write-replicas, alta disponibilidade e integridade dos dados.
 
 **(b) Latência de Autenticação**  
 A validação de API Key em cada requisição implica um SELECT no banco. Seria necessário adicionar **cache distribuído (Redis)** para as chaves, diminuindo a latência de lookup de ms para µs.
 
 **(c) Escalabilidade Horizontal**  
-A aplicação monolítica precisaria ser replicada atrás de um **load balancer** (Nginx, HAProxy). Isso exige que o estado não fique armazenado na memória local da instância. O estado atual (contexto da API Key) está em ThreadLocal, o que é aceitável para uma única instância, mas requer redesenho para múltiplas instâncias.
+A aplicação monolítica precisaria ser replicada atrás de um **load balancer** (como o da AWS). Isso exige que o estado não fique armazenado na memória local da instância. O estado atual (contexto da API Key) está em ThreadLocal, o que é aceitável para uma única instância, mas requer redesenho para múltiplas instâncias.
 
 **(d) Rate Limiting e Proteção**  
 Sem controle de taxa, um único cliente poderia monopolizar recursos. Seria necessário implementar **rate limiting** via biblioteca como Resilience4j ou Spring Cloud Gateway, limitando requisições por API Key.
@@ -411,8 +411,8 @@ Em escala, seria difícil debugar problemas sem instrumentação. Seria necessá
 
 ### Pergunta 2: Melhorias Futuras na Arquitetura
 
-(a) **Substituir SQLite/H2 por PostgreSQL**  
-Para suporte a transações ACID mais robustas, resiliência e escalabilidade em produção.
+(a) **Substituir SQLite/H2 por um banco que suporte transações ACID (como Cassandra da AWS)**  
+Para suporte a transações ACID mais robustas, resiliência e escalabilidade em produção, configurando para conseguir um alto nível de fidelidade nos dados salvos, e com alta disponibilidade.
 
 (b) **Cache Distribuído (Redis)**  
 Para armazenar API Keys validadas e consultas frequentes de satélites, reduzindo latência.
